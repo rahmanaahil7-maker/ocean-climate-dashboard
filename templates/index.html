@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Climate Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Fullscreen Background Video -->
+    <video class="ocean-bg-video" autoplay loop muted playsinline>
+        <source src="{{ url_for('static', filename='videos/ocean_background.mp4') }}" type="video/mp4">
+    </video>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading Historical Data...</p>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-abstergo-logo"></span>
+            <span>ABSTERGO INDUSTRIES</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}" style="color: var(--accent-cyan);">Dashboard</a></li>
+            <li><a href="{{ url_for('forecast_page') }}">Forecast</a></li>
+            <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('logout') }}" style="color: var(--error-red);">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-container">
+        <header>
+            <h1>Global Telemetry</h1>
+            <p>Historical and live tracking of oceanic stations</p>
+        </header>
+
+        <div class="controls-section">
+            <form method="GET" action="/" class="filter-form">
+                <div class="filter-group">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" value="{{ request.args.get('start_date', '') }}">
+                </div>
+                <div class="filter-group">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" value="{{ request.args.get('end_date', '') }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="climate_filter">Climate Feature:</label>
+                    <select id="climate_filter" name="climate_filter">
+                        <option value="all" {% if request.args.get('climate_filter') == 'all' %}selected{% endif %}>All Metrics</option>
+                        <option value="anomaly" {% if request.args.get('climate_filter') == 'anomaly' %}selected{% endif %}>Anomalies Only</option>
+                        <option value="high_temp" {% if request.args.get('climate_filter') == 'high_temp' %}selected{% endif %}>High Temp (&gt;18°C)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Apply Filter</button>
+                <a href="{{ url_for('index') }}" class="btn btn-outline">Clear</a>
+            </form>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="{{ url_for('export_csv', start_date=request.args.get('start_date', ''), end_date=request.args.get('end_date', ''), climate_filter=request.args.get('climate_filter', 'all')) }}" class="btn btn-export">
+                    ⬇ Export CSV
+                </a>
+                <a href="{{ url_for('export_pdf', start_date=request.args.get('start_date', ''), end_date=request.args.get('end_date', ''), climate_filter=request.args.get('climate_filter', 'all')) }}" class="btn" style="background-color: #ef4444; color: white;">
+                    📄 Download PDF
+                </a>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Average</h3><p class="stat-value">{{ stats.avg }} °C</p></div>
+            <div class="stat-card"><h3>Minimum</h3><p class="stat-value">{{ stats.min }} °C</p></div>
+            <div class="stat-card"><h3>Maximum</h3><p class="stat-value">{{ stats.max }} °C</p></div>
+            <div class="stat-card"><h3>Anomaly</h3><p class="stat-value {{ stats.anomaly_class }}">{{ stats.anomaly }} °C</p></div>
+        </div>
+
+        <div class="map-section">
+            <h2>Ocean Monitoring Stations</h2>
+            <div id="map"></div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container"><canvas id="tempChart"></canvas></div>
+            <div class="chart-container"><canvas id="waveChart"></canvas></div>
+            <div class="chart-container"><canvas id="windChart"></canvas></div>
+        </div>
+
+        <div class="data-section">
+            <h2>Recent Telemetry Observations</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Surface Temp (°C)</th>
+                            <th>Wave Height (m)</th>
+                            <th>Wind Speed (km/h)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_data[-5:] %}
+                        <tr>
+                            <td>{{ row.Date }}</td>
+                            <td>{{ row.Temp_C }}</td>
+                            <td>{{ row.Wave_Height_m }}</td>
+                            <td>{{ row.Wind_Speed_kmh }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="abstergo-footer">
+            <p>Ocean Climate Intelligence Platform | Operator: <strong>AK_007</strong></p>
+            <p style="margin-top: 5px;">
+                Powered by <span class="abstergo-logo"></span><span class="abstergo-brand">Abstergo Industries</span> Research Division
+            </p>
+        </footer>
+    </div>
+
+    <script id="climate-data" type="application/json">{{ chart_data | safe }}</script>
+    <script id="locations-data" type="application/json">{{ locations | safe }}</script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

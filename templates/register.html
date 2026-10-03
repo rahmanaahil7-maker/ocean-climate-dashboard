@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Ocean Climate Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div class="stat-card" style="width: 100%; max-width: 400px; text-align: left;">
+        <h2 style="color: var(--accent-cyan); margin-top: 0;">Create Account</h2>
+        {% if error %}<p style="color: var(--error-red); font-size: 0.85rem;">{{ error }}</p>{% endif %}
+        <form method="POST" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+            <div class="filter-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required style="width: 100%;">
+            </div>
+            <div class="filter-group">
+                <label>Password</label>
+                <input type="password" name="password" required style="width: 100%; background-color: var(--bg-ocean); border: 1px solid var(--border-color); padding: 0 14px; border-radius: 6px; height: 44px; color: white;">
+            </div>
+            <button type="submit" class="btn btn-export" style="width: 100%; justify-content: center;">Register</button>
+        </form>
+        <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            Already have an account? <a href="{{ url_for('login') }}" style="color: var(--accent-cyan);">Login</a>
+        </p>
+    </div>
+</body>
+</html>

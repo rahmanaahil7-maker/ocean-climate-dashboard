@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Ocean Climate Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Fullscreen Background Video -->
+    <video class="ocean-bg-video" autoplay loop muted playsinline>
+        <source src="{{ url_for('static', filename='videos/ocean_background.mp4') }}" type="video/mp4">
+    </video>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-abstergo-logo"></span>
+            <span>ABSTERGO INDUSTRIES</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('forecast_page') }}">Forecast</a></li>
+            <li><a href="{{ url_for('settings') }}" style="color: var(--accent-cyan);">Settings</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('logout') }}" style="color: var(--error-red);">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-container" style="max-width: 600px;">
+        <header>
+            <h1>User Preferences & Alerts</h1>
+            <p>Configure telemetry notification thresholds</p>
+        </header>
+
+        {% if message %}
+        <div style="background-color: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <div class="stat-card" style="text-align: left; padding: 30px;">
+            <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="filter-group">
+                    <label>Temperature Threshold Alert (°C)</label>
+                    <input type="number" step="0.1" name="temp_threshold" value="{{ settings.temp_threshold }}" required style="width: 100%; background-color: var(--bg-ocean); border: 1px solid var(--border-color); padding: 0 14px; border-radius: 6px; height: 44px; color: white; box-sizing: border-box;">
+                    <small style="color: var(--text-muted); margin-top: 5px;">An email alert will trigger if surface temperature exceeds this value.</small>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="alerts_enabled" name="alerts_enabled" {% if settings.alerts_enabled %}checked{% endif %} style="width: 18px; height: 18px; accent-color: var(--accent-cyan);">
+                    <label for="alerts_enabled" style="font-weight: 600; color: var(--text-main); cursor: pointer;">Enable Email Notifications</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="justify-content: center; margin-top: 10px;">Save Preferences</button>
+            </form>
+        </div>
+
+        <footer class="abstergo-footer">
+            <p>Ocean Climate Intelligence Platform | Operator: <strong>AK_007</strong></p>
+            <p style="margin-top: 5px;">
+                Powered by <span class="abstergo-logo"></span><span class="abstergo-brand">Abstergo Industries</span> Research Division
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

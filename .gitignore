@@ -1,0 +1,16 @@
+# Python environment
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Database (optional: remove this line if you WANT to upload your saved data)
+*.sqlite
+*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore large videos if they are over 100MB
+# static/videos/*.mp4

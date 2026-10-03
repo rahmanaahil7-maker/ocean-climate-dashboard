@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Ocean Climate Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: var(--bg-ocean);">
+    
+    <div class="stat-card" style="width: 100%; max-width: 420px; text-align: left; padding: 40px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        
+        <!-- Header Branding -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">🌊</div>
+            <h2 style="color: var(--text-main); margin: 0; font-size: 1.6rem;">OceanClimate Portal</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Sign in to access telemetry & analytics</p>
+        </div>
+
+        {% if error %}
+        <div style="background-color: rgba(239, 68, 68, 0.1); color: var(--error-red); border: 1px solid var(--error-red); padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.85rem; text-align: center;">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="filter-group">
+                <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Username or Email</label>
+                <!-- Changed type from "email" to "text" to prevent browser strict email validation errors -->
+                <input type="text" name="email" placeholder="Enter your email or handle" required style="width: 100%; background-color: var(--bg-ocean); color: var(--text-main); border: 1px solid var(--border-color); padding: 0 14px; border-radius: 6px; height: 44px; font-size: 0.95rem; box-sizing: border-box;">
+            </div>
+
+            <div class="filter-group">
+                <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Password</label>
+                <input type="password" name="password" placeholder="••••••••" required style="width: 100%; background-color: var(--bg-ocean); color: var(--text-main); border: 1px solid var(--border-color); padding: 0 14px; border-radius: 6px; height: 44px; font-size: 0.95rem; box-sizing: border-box;">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; height: 44px; font-size: 1rem; margin-top: 10px;">Secure Login</button>
+        </form>
+
+        <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+            Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">Register here</a>
+        </p>
+    </div>
+
+</body>
+</html>

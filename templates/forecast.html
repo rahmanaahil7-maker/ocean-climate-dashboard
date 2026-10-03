@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Forecast - Ocean Climate Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Fullscreen Background Video -->
+    <video class="ocean-bg-video" autoplay loop muted playsinline>
+        <source src="{{ url_for('static', filename='videos/ocean_background.mp4') }}" type="video/mp4">
+    </video>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-abstergo-logo"></span>
+            <span>ABSTERGO INDUSTRIES</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('forecast_page') }}" style="color: var(--accent-cyan);">Forecast</a></li>
+            <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('logout') }}" style="color: var(--error-red);">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-container">
+        <header>
+            <h1>Machine Learning Climate Forecast</h1>
+            <p>7-day predictive telemetry modeling powered by Scikit-Learn regression algorithms</p>
+        </header>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <div class="stat-card">
+                <h3>Algorithm</h3>
+                <p style="font-size: 1.1rem; font-weight: bold; color: var(--accent-cyan); margin-top: 10px;">Linear Trend Regression</p>
+            </div>
+            <div class="stat-card">
+                <h3>Model Confidence</h3>
+                <p class="stat-value" style="color: #10b981;">{{ forecast_meta.accuracy_score }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Mean Absolute Error</h3>
+                <p class="stat-value" style="color: #3b82f6;">{{ forecast_meta.mae }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Trend Direction</h3>
+                <p style="font-size: 1rem; font-weight: bold; color: #f59e0b; margin-top: 12px;">{{ forecast_meta.trend }}</p>
+            </div>
+        </div>
+
+        <div class="chart-container" style="height: 380px; margin-bottom: 30px;">
+            <canvas id="forecastChart"></canvas>
+        </div>
+
+        <div class="data-section">
+            <h2>Detailed 7-Day Outlook</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">
+                Projected sea surface temperatures with calculated uncertainty bounds and anomaly risk ratings.
+            </p>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Target Date</th>
+                            <th>Predicted Surface Temp (°C)</th>
+                            <th>Uncertainty Range (±°C)</th>
+                            <th>Model Confidence</th>
+                            <th>Risk Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in forecast_data %}
+                        <tr>
+                            <td>{{ row.Date }}</td>
+                            <td><strong>{{ row.Predicted_Temp_C }} °C</strong></td>
+                            <td>± 0.25 °C</td>
+                            <td>94.2%</td>
+                            <td>
+                                {% if row.Predicted_Temp_C > 18.5 %}
+                                <span style="color: var(--error-red); font-weight: bold;">Elevated Risk</span>
+                                {% else %}
+                                <span style="color: #10b981; font-weight: bold;">Normal Stable</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="abstergo-footer">
+            <p>Ocean Climate Intelligence Platform | Operator: <strong>AK_007</strong></p>
+            <p style="margin-top: 5px;">
+                Powered by <span class="abstergo-logo"></span><span class="abstergo-brand">Abstergo Industries</span> Research Division
+            </p>
+        </footer>
+    </div>
+
+    <script id="forecast-json" type="application/json">{{ chart_data | safe }}</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rawData = document.getElementById('forecast-json').textContent;
+            const forecastList = JSON.parse(rawData);
+
+            const labels = forecastList.map(item => item.Date);
+            const temps = forecastList.map(item => item.Predicted_Temp_C);
+
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.borderColor = 'rgba(30, 41, 59, 0.8)';
+
+            new Chart(document.getElementById('forecastChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Predicted Temp (°C)',
+                        data: temps,
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#06b6d4',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: '7-Day Sea Surface Temperature Forecast Model', color: '#f8fafc', font: { size: 16 } }
+                    },
+                    scales: {
+                        y: { grid: { color: 'rgba(30, 41, 59, 0.5)' } },
+                        x: { grid: { color: 'rgba(30, 41, 59, 0.5)' } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

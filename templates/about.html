@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Ocean Climate Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Fullscreen Background Video -->
+    <video class="ocean-bg-video" autoplay loop muted playsinline>
+        <source src="{{ url_for('static', filename='videos/ocean_background.mp4') }}" type="video/mp4">
+    </video>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-abstergo-logo"></span>
+            <span>ABSTERGO INDUSTRIES</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('forecast_page') }}">Forecast</a></li>
+            <li><a href="{{ url_for('settings') }}">Settings</a></li>
+            <li><a href="{{ url_for('about') }}" style="color: var(--accent-cyan);">About</a></li>
+            <li><a href="{{ url_for('logout') }}" style="color: var(--error-red);">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-container" style="max-width: 1000px;">
+        <header>
+            <h1>System Architecture & Documentation</h1>
+            <p>Comprehensive technical specifications for the Ocean Climate Intelligence Platform</p>
+        </header>
+
+        <div class="stat-card" style="text-align: left; padding: 30px; margin-bottom: 25px;">
+            <h2 style="color: var(--accent-cyan); margin-top: 0; font-size: 1.3rem;">Project Summary</h2>
+            <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 0;">
+                The <strong style="color: var(--text-main);">Ocean Climate Dashboard</strong> is a production-grade enterprise web application engineered to monitor, validate, and predict global oceanic telemetry. Designed under operator <strong style="color: var(--text-main);">AK_007</strong>, it integrates real-time geospatial mapping, unsupervised machine learning anomaly detection, automated predictive regression forecasting, user session management, and instant PDF reporting.
+            </p>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 25px;">
+            <div class="stat-card" style="text-align: left;">
+                <h3 style="color: var(--accent-blue);">Backend Core</h3>
+                <ul style="color: var(--text-muted); padding-left: 18px; margin-top: 10px; line-height: 1.6; font-size: 0.95rem;">
+                    <li><strong>Framework:</strong> Flask (Python WSGI)</li>
+                    <li><strong>Database:</strong> SQLite with custom relational tables</li>
+                    <li><strong>Data Science:</strong> Pandas & NumPy</li>
+                    <li><strong>Validation:</strong> Pydantic Type Schemas</li>
+                </ul>
+            </div>
+            
+            <div class="stat-card" style="text-align: left;">
+                <h3 style="color: #10b981;">Intelligence & ML</h3>
+                <ul style="color: var(--text-muted); padding-left: 18px; margin-top: 10px; line-height: 1.6; font-size: 0.95rem;">
+                    <li><strong>Anomaly Detection:</strong> Scikit-Learn Isolation Forest</li>
+                    <li><strong>Forecasting:</strong> Linear Trend Regression</li>
+                    <li><strong>Reporting:</strong> ReportLab dynamic PDF engine</li>
+                    <li><strong>Security:</strong> Flask-Login & Werkzeug hashing</li>
+                </ul>
+            </div>
+
+            <div class="stat-card" style="text-align: left;">
+                <h3 style="color: #f59e0b;">Frontend UI/UX</h3>
+                <ul style="color: var(--text-muted); padding-left: 18px; margin-top: 10px; line-height: 1.6; font-size: 0.95rem;">
+                    <li><strong>Styling:</strong> Custom Dark Ocean CSS Grid</li>
+                    <li><strong>Charting:</strong> Chart.js Responsive Telemetry</li>
+                    <li><strong>Geospatial:</strong> Leaflet.js Interactive Mapping</li>
+                    <li><strong>Interface:</strong> Fully Mobile Responsive</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="stat-card" style="text-align: left; padding: 30px;">
+            <h2 style="color: var(--text-main); margin-top: 0; font-size: 1.3rem;">Development Compliance Status</h2>
+            <div class="table-responsive">
+                <table style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Milestone Level</th>
+                            <th>Core Modules</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Level 1 (Core)</td>
+                            <td>Dashboard, Leaflet Map, NOAA API Integration, Telemetry Charts</td>
+                            <td><span style="color: #10b981; font-weight: bold;">✔ Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Level 2 (Advanced)</td>
+                            <td>SQLite Database, Filtering, CSV Export, Data Quality Scoring</td>
+                            <td><span style="color: #10b981; font-weight: bold;">✔ Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Level 3 (Enterprise)</td>
+                            <td>Isolation Forest ML, 7-Day Forecasting, User Auth, PDF Reports, Alerts</td>
+                            <td><span style="color: #10b981; font-weight: bold;">✔ Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="abstergo-footer">
+            <p>Ocean Climate Intelligence Platform | Operator: <strong>AK_007</strong></p>
+            <p style="margin-top: 5px;">
+                Powered by <span class="abstergo-logo"></span><span class="abstergo-brand">Abstergo Industries</span> Research Division
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
